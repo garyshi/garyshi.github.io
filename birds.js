@@ -20,7 +20,7 @@ var drawBird = function(ctx, head_size, body_size, tail_size, wing_span, wing_sw
 	ctx.stroke();
 	
 	ctx.beginPath();
-	ctx.arc(head_size*0.2, head_size*0.7, head_size*0.1, 0, 2*Math.PI);
+	ctx.arc(head_size*0.15, head_size*0.6, head_size*0.12, 0, 2*Math.PI);
 	ctx.fill();
 	
 	// Draw the wing
@@ -88,21 +88,20 @@ var Bird = function(x, y, orientation, head_size, body_size, tail_size,
 }
 
 var birds = [];
-var max_birds = 50;
+var max_birds = 40;
 
-var spawnBird = function() {
+var spawnBird = function(x) {
 	var good_pos = false;
-	var size = 5 * (1 + 4*Math.random());
+	var size = 6 * (1 + 3*Math.random());
 	for (var i = 0; i < 1 && !good_pos; ++i) {
 		good_pos = true;
-		var x = canvas_width + 20 + 50 * Math.random();
 		var y = canvas_height * (0.2 + Math.random());
 		for (var j = 0; j < birds.length; ++j) {
 			var b = birds[j];
 			if (b != null) {
 				var dx = x - b.x;
 				var dy = y - b.y;
-				var dd = size*2.5 + b.head_size*2.5;
+				var dd = size*2.7 + b.head_size*2.7;
 				if (dx*dx+dy*dy < 100 + dd*dd) { good_pos = false; break; }
 			}
 		}
@@ -112,7 +111,7 @@ var spawnBird = function() {
 }
 
 for (var i = 0; i < max_birds; ++i) {
-	birds.push(spawnBird());
+	birds.push(spawnBird(50 + canvas_width * Math.random()));
 }
 
 var updateFrame = function() {
@@ -120,10 +119,10 @@ var updateFrame = function() {
 	ctx.clearRect(0, 0, canvas_width, canvas_height);
 	for (var i = 0; i < birds.length; ++i) {
 		if (birds[i] == null) {
-			if (Math.random() < 0.01) birds[i] = spawnBird();
-		} else {
-			if (!birds[i].update(ctx))
-				birds[i] = null;
+			if (Math.random() < 0.01)
+				birds[i] = spawnBird(canvas_width + 20 + 50 * Math.random());
+		} else if (!birds[i].update(ctx)) {
+			birds[i] = null;
 		}
 	}
 }
