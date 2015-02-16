@@ -1,4 +1,10 @@
-var canvas = document.getElementById("canvas");
+var bodyWidth = document.body.clientWidth;
+var bodyHeight = document.body.clientHeight;
+var canvas = document.createElement('canvas');
+canvas.id = "canvas";
+canvas.setAttribute('width', bodyWidth);
+canvas.setAttribute('height', bodyHeight);
+document.body.appendChild(canvas);
 var ctx = canvas.getContext("2d");
 var canvas_width = ctx.canvas.clientWidth;
 var canvas_height = ctx.canvas.clientHeight;
@@ -18,11 +24,11 @@ var drawBird = function(ctx, head_size, body_size, tail_size, wing_span, wing_sw
 	ctx.beginPath();
 	ctx.arc(0, head_size/2, head_size/2, 0, 2*Math.PI);
 	ctx.stroke();
-	
+
 	ctx.beginPath();
 	ctx.arc(head_size*0.15, head_size*0.6, head_size*0.12, 0, 2*Math.PI);
 	ctx.fill();
-	
+
 	// Draw the wing
 	ctx.beginPath();
 	ctx.moveTo(0, 0);
@@ -37,7 +43,7 @@ var drawBird = function(ctx, head_size, body_size, tail_size, wing_span, wing_sw
 		              wing_span, -(body_size+(1-0.6)*wing_sweep),
 	                  wing_span, -(body_size+wing_sweep));
 	ctx.stroke();
-	
+
 	ctx.beginPath();
 	ctx.moveTo(0, -body_size);
 	ctx.bezierCurveTo(-wing_span*0.4, -body_size,
@@ -115,7 +121,8 @@ for (var i = 0; i < max_birds; ++i) {
 }
 
 var updateFrame = function() {
-	ctx.resetTransform();
+	if(ctx.resetTransform) ctx.resetTransform();
+	else canvas.width = canvas.width;
 	ctx.clearRect(0, 0, canvas_width, canvas_height);
 	for (var i = 0; i < birds.length; ++i) {
 		if (birds[i] == null) {
